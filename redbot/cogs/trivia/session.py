@@ -21,11 +21,13 @@ _REVEAL_MESSAGES = (
     _("Easy: {answer}."),
     _("Oh really? It's {answer} of course."),
 )
-_REVEAL_MESSAGES_WITH_SPOILER = (
-    _("I know this one! ||{answer}||!"),
-    _("Easy: ||{answer}||."),
+
+_REVEAL_MESSAGES_WITH_SPOILERS = (
+    _("I know this one! ||{answer}!||"),
+    _("Easy: ||{answer}.||"),
     _("Oh really? It's ||{answer}|| of course."),
 )
+
 _FAIL_MESSAGES = (
     _("To the next one I guess..."),
     _("Moving on..."),
@@ -37,10 +39,8 @@ _ = T_
 
 class TriviaSession:
     """Class to run a session of trivia with the user.
-
     To run the trivia session immediately, use `TriviaSession.start` instead of
     instantiating directly.
-
     Attributes
     ----------
     ctx : `commands.Context`
@@ -64,7 +64,6 @@ class TriviaSession:
         players are of type `discord.Member`.
     count : `int`
         The number of questions which have been asked.
-
     """
 
     def __init__(self, ctx, question_list: dict, settings: dict):
@@ -81,10 +80,8 @@ class TriviaSession:
     @classmethod
     def start(cls, ctx, question_list, settings):
         """Create and start a trivia session.
-
         This allows the session to manage the running and cancellation of its
         own tasks.
-
         Parameters
         ----------
         ctx : `commands.Context`
@@ -93,12 +90,10 @@ class TriviaSession:
             Same as `TriviaSession.question_list`
         settings : `dict`
             Same as `TriviaSession.settings`
-
         Returns
         -------
         TriviaSession
             The new trivia session being run.
-
         """
         session = cls(ctx, question_list, settings)
         loop = ctx.bot.loop
@@ -125,7 +120,6 @@ class TriviaSession:
 
     async def run(self):
         """Run the trivia session.
-
         In order for the trivia session to be stopped correctly, this should
         only be called internally by `TriviaSession.start`.
         """
@@ -164,13 +158,11 @@ class TriviaSession:
 
     def _iter_questions(self):
         """Iterate over questions and answers for this session.
-
         Yields
         ------
         `tuple`
             A tuple containing the question (`str`) and the answers (`tuple` of
             `str`).
-
         """
         for question, answers in self.question_list:
             answers = _parse_answers(answers)
@@ -178,12 +170,9 @@ class TriviaSession:
 
     async def wait_for_answer(self, answers, delay: float, timeout: float):
         """Wait for a correct answer, and then respond.
-
         Scores are also updated in this method.
-
         Returns False if waiting was cancelled; this is usually due to the
         session being forcibly stopped.
-
         Parameters
         ----------
         answers : `iterable` of `str`
@@ -192,12 +181,10 @@ class TriviaSession:
             How long users have to respond (in seconds).
         timeout : float
             How long before the session ends due to no responses (in seconds).
-
         Returns
         -------
         bool
             :code:`True` if the session wasn't interrupted.
-
         """
         try:
             message = await self.ctx.bot.wait_for(
@@ -210,10 +197,9 @@ class TriviaSession:
                 return False
             if self.settings["reveal_answer"]:
                 if self.settings["spoiler_hide_answer"]:
-                    reply = T_(random.choice(_REVEAL_MESSAGES_WITH_SPOILER)).format(answer=answers[0])
+                    reply = T_(random.choice(_REVEAL_MESSAGES_WITH_SPOILERS)).format(answer=answers[0])
                 else:
                     reply = T_(random.choice(_REVEAL_MESSAGES)).format(answer=answers[0])
-                reply = T_(random.choice(_REVEAL_MESSAGES)).format(answer=answers[0])
             else:
                 reply = T_(random.choice(_FAIL_MESSAGES))
             if self.settings["bot_plays"]:
@@ -228,21 +214,17 @@ class TriviaSession:
 
     def check_answer(self, answers):
         """Get a predicate to check for correct answers.
-
         The returned predicate takes a message as its only parameter,
         and returns ``True`` if the message contains any of the
         given answers.
-
         Parameters
         ----------
         answers : `iterable` of `str`
             The answers which the predicate must check for.
-
         Returns
         -------
         function
             The message predicate.
-
         """
         answers = tuple(s.lower() for s in answers)
 
@@ -292,16 +274,13 @@ class TriviaSession:
 
     async def pay_winners(self, multiplier: float):
         """Pay the winner(s) of this trivia session.
-
         Payout only occurs if there are at least 3 human contestants.
         If a tie occurs the payout is split evenly among the winners.
-
         Parameters
         ----------
         multiplier : float
             The coefficient of the winning score, used to determine the amount
             paid.
-
         """
         if not self.scores:
             return
@@ -345,23 +324,19 @@ class TriviaSession:
 
 def _parse_answers(answers):
     """Parse the raw answers to readable strings.
-
     The reason this exists is because of YAML's ambiguous syntax. For example,
     if the answer to a question in YAML is ``yes``, YAML will load it as the
     boolean value ``True``, which is not necessarily the desired answer. This
     function aims to undo that for bools, and possibly for numbers in the
     future too.
-
     Parameters
     ----------
     answers : `iterable` of `str`
         The raw answers loaded from YAML.
-
     Returns
     -------
     `tuple` of `str`
         The answers in readable/ guessable strings.
-
     """
     ret = []
     for answer in answers:

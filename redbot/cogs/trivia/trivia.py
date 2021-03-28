@@ -93,8 +93,8 @@ class Trivia(commands.Cog):
                 "Points to win: {max_score}\n"
                 "Reveal answer on timeout: {reveal_answer}\n"
                 "Payout multiplier: {payout_multiplier}\n"
-                "Allow lists to override settings: {allow_override}"
-                "Hide answers with spoilers: {spoiler_hide_answer}"
+                "Allow lists to override settings: {allow_override}\n"
+                "Use Spoilers in answers: {spoiler_hide_answer}"
             ).format(**settings_dict),
             lang="py",
         )
@@ -151,10 +151,20 @@ class Trivia(commands.Cog):
                 )
             )
 
+    @triviaset.command(name="spoilerhideanswer", usage="<true_or_false>")
+    async def trivaset_spoiler_hide_answer(self, ctx: commands.Context, enabled: bool):
+        """Allow the trivia answer to be hidden when it is revealed (if it is revealed)
+        """
+        settings = self.config.guild(ctx.guild)
+        await settings.spoiler_hide_answer.set(enabled)
+        if enabled:
+            await ctx.send(_("Answers will appear in spoilers from now on."))
+        else:
+            await ctx.send(_("Answers will not appear in spoilers from now on."))
+
     @triviaset.command(name="botplays", usage="<true_or_false>")
     async def trivaset_bot_plays(self, ctx: commands.Context, enabled: bool):
         """Set whether or not the bot gains points.
-
         If enabled, the bot will gain a point if no one guesses correctly.
         """
         settings = self.config.guild(ctx.guild)
@@ -167,7 +177,6 @@ class Trivia(commands.Cog):
     @triviaset.command(name="revealanswer", usage="<true_or_false>")
     async def trivaset_reveal_answer(self, ctx: commands.Context, enabled: bool):
         """Set whether or not the answer is revealed.
-
         If enabled, the bot will reveal the answer if no one guesses correctly
         in time.
         """
@@ -183,11 +192,9 @@ class Trivia(commands.Cog):
     @triviaset.command(name="payout")
     async def triviaset_payout_multiplier(self, ctx: commands.Context, multiplier: finite_float):
         """Set the payout multiplier.
-
         This can be any positive decimal number. If a user wins trivia when at
         least 3 members are playing, they will receive credits. Set to 0 to
         disable.
-
         The number of credits is determined by multiplying their total score by
         this multiplier.
         """
@@ -285,7 +292,6 @@ class Trivia(commands.Cog):
     @commands.guild_only()
     async def trivia(self, ctx: commands.Context, *categories: str):
         """Start trivia session on the specified category.
-
         You may list multiple categories, in which case the trivia will involve
         questions from all of them.
         """
@@ -370,7 +376,6 @@ class Trivia(commands.Cog):
     )
     async def trivia_leaderboard(self, ctx: commands.Context):
         """Leaderboard for trivia.
-
         Defaults to the top 10 of this server, sorted by total wins. Use
         subcommands for a more customised leaderboard.
         """
@@ -385,13 +390,11 @@ class Trivia(commands.Cog):
         self, ctx: commands.Context, sort_by: str = "wins", top: int = 10
     ):
         """Leaderboard for this server.
-
         `<sort_by>` can be any of the following fields:
          - `wins`  : total wins
          - `avg`   : average score
          - `total` : total correct answers
          - `games` : total games played
-
         `<top>` is the number of ranks to show on the leaderboard.
         """
         key = self._get_sort_key(sort_by)
@@ -414,13 +417,11 @@ class Trivia(commands.Cog):
         self, ctx: commands.Context, sort_by: str = "wins", top: int = 10
     ):
         """Global trivia leaderboard.
-
         `<sort_by>` can be any of the following fields:
          - `wins`  : total wins
          - `avg`   : average score
          - `total` : total correct answers from all sessions
          - `games` : total games played
-
         `<top>` is the number of ranks to show on the leaderboard.
         """
         key = self._get_sort_key(sort_by)
@@ -460,7 +461,6 @@ class Trivia(commands.Cog):
 
     async def send_leaderboard(self, ctx: commands.Context, data: dict, key: str, top: int):
         """Send the leaderboard from the given data.
-
         Parameters
         ----------
         ctx : commands.Context
@@ -473,12 +473,10 @@ class Trivia(commands.Cog):
             ``games`` or ``average_score``.
         top : int
             The number of members to display on the leaderboard.
-
         Returns
         -------
         `list` of `discord.Message`
             The sent leaderboard messages.
-
         """
         if not data:
             await ctx.send(_("There are no scores on record!"))
@@ -488,17 +486,6 @@ class Trivia(commands.Cog):
         for page in pagify(leaderboard, shorten_by=10):
             ret.append(await ctx.send(box(page, lang="py")))
         return ret
-
-    @triviaset.command(name="hideanswer", usage="<true_or_false>")
-    async def trivaset_use_spoilers(self, ctx: commands.Context, enabled: bool):
-        """ Hide the answer with spoilers
-        """
-        settings = self.config.guild(ctx.guild)
-        await settings.use_spoilers.set(enabled)
-        if enabled:
-            await ctx.send(_("Answers will be hidden from now on."))
-        else:
-            await ctx.send(_("Answers will not be hidden from now on."))
 
     @staticmethod
     def _get_leaderboard(data: dict, key: str, top: int):
@@ -557,15 +544,12 @@ class Trivia(commands.Cog):
     @commands.Cog.listener()
     async def on_trivia_end(self, session: TriviaSession):
         """Event for a trivia session ending.
-
         This method removes the session from this cog's sessions, and
         cancels any tasks which it was running.
-
         Parameters
         ----------
         session : TriviaSession
             The session which has just ended.
-
         """
         channel = session.ctx.channel
         LOG.debug("Ending trivia session; #%s in %s", channel, channel.guild.id)
@@ -576,12 +560,10 @@ class Trivia(commands.Cog):
 
     async def update_leaderboard(self, session):
         """Update the leaderboard with the given scores.
-
         Parameters
         ----------
         session : TriviaSession
             The trivia session to update scores from.
-
         """
         max_score = session.settings["max_score"]
         for member, score in session.scores.items():
@@ -596,17 +578,14 @@ class Trivia(commands.Cog):
 
     def get_trivia_list(self, category: str) -> dict:
         """Get the trivia list corresponding to the given category.
-
         Parameters
         ----------
         category : str
             The desired category. Case sensitive.
-
         Returns
         -------
         `dict`
             A dict mapping questions (`str`) to answers (`list` of `str`).
-
         """
         try:
             path = next(p for p in self._all_lists() if p.stem == category)
@@ -625,12 +604,10 @@ class Trivia(commands.Cog):
         self, ctx: commands.Context, attachment: discord.Attachment
     ) -> None:
         """Checks and saves a trivia list to data folder.
-
         Parameters
         ----------
         file : discord.Attachment
             A discord message attachment.
-
         Returns
         -------
         None
