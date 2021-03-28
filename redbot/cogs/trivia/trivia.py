@@ -53,6 +53,7 @@ class Trivia(commands.Cog):
             reveal_answer=True,
             payout_multiplier=0.0,
             allow_override=True,
+            spoiler_hide_answer=False,
         )
 
         self.config.register_member(wins=0, games=0, total_score=0)
@@ -93,6 +94,7 @@ class Trivia(commands.Cog):
                 "Reveal answer on timeout: {reveal_answer}\n"
                 "Payout multiplier: {payout_multiplier}\n"
                 "Allow lists to override settings: {allow_override}"
+                "Hide answers with spoilers: {spoiler_hide_answer}"
             ).format(**settings_dict),
             lang="py",
         )
