@@ -489,6 +489,17 @@ class Trivia(commands.Cog):
             ret.append(await ctx.send(box(page, lang="py")))
         return ret
 
+    @triviaset.command(name="hideanswer", usage="<true_or_false>")
+    async def trivaset_use_spoilers(self, ctx: commands.Context, enabled: bool):
+        """ Hide the answer with spoilers
+        """
+        settings = self.config.guild(ctx.guild)
+        await settings.use_spoilers.set(enabled)
+        if enabled:
+            await ctx.send(_("Answers will be hidden from now on."))
+        else:
+            await ctx.send(_("Answers will not be hidden from now on."))
+
     @staticmethod
     def _get_leaderboard(data: dict, key: str, top: int):
         # Mix in average score
