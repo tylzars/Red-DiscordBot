@@ -20,12 +20,19 @@ _REVEAL_MESSAGES = (
     _("I know this one! {answer}!"),
     _("Easy: {answer}."),
     _("Oh really? It's {answer} of course."),
+    _("The answer seems to be: {answer}!"),
+    _("Oh me, oh my, of course the answer is {answer}!"),
+    _("Well, I must say, the real answer is {answer}!"),
+
 )
 
 _REVEAL_MESSAGES_WITH_SPOILERS = (
-    _("I know this one! ||{answer}!||"),
+    _("I know this one! ||{answer}||!"),
     _("Easy: ||{answer}.||"),
     _("Oh really? It's ||{answer}|| of course."),
+    _("The answer seems to be: ||{answer}||!"),
+    _("Oh me, oh my, of course the answer is ||{answer}||!"),
+    _("Well, I must say, the real answer is ||{answer}||}!"),
 )
 
 _FAIL_MESSAGES = (
