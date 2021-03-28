@@ -21,6 +21,11 @@ _REVEAL_MESSAGES = (
     _("Easy: {answer}."),
     _("Oh really? It's {answer} of course."),
 )
+_REVEAL_MESSAGES_WITH_SPOILER = (
+    _("I know this one! ||{answer}||!"),
+    _("Easy: ||{answer}||."),
+    _("Oh really? It's ||{answer}|| of course."),
+)
 _FAIL_MESSAGES = (
     _("To the next one I guess..."),
     _("Moving on..."),
