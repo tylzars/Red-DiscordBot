@@ -179,6 +179,7 @@ class Cleanup(commands.Cog):
             channel.id,
         )
         log.info(reason)
+        await ctx.send(reason)
 
         await mass_purge(to_delete, channel)
 
@@ -249,7 +250,7 @@ class Cleanup(commands.Cog):
             )
         )
         log.info(reason)
-
+        await ctx.send(reason)
         await mass_purge(to_delete, channel)
 
     @cleanup.command()
@@ -290,6 +291,7 @@ class Cleanup(commands.Cog):
             channel.name,
         )
         log.info(reason)
+        await ctx.send(reason)
 
         await mass_purge(to_delete, channel)
 
@@ -337,6 +339,7 @@ class Cleanup(commands.Cog):
             channel.name,
         )
         log.info(reason)
+        await ctx.send(reason)
 
         await mass_purge(to_delete, channel)
 
@@ -389,6 +392,7 @@ class Cleanup(commands.Cog):
             channel.name,
         )
         log.info(reason)
+        await ctx.send(reason)
 
         await mass_purge(to_delete, channel)
 
@@ -427,6 +431,7 @@ class Cleanup(commands.Cog):
             author.name, author.id, len(to_delete), channel.name
         )
         log.info(reason)
+        await ctx.send(reason)
 
         await mass_purge(to_delete, channel)
 
@@ -513,6 +518,7 @@ class Cleanup(commands.Cog):
             )
         )
         log.info(reason)
+        await ctx.send(reason)
 
         await mass_purge(to_delete, channel)
 
@@ -598,7 +604,8 @@ class Cleanup(commands.Cog):
             )
         )
         log.info(reason)
-
+        await ctx.send(reason)
+        
         if can_mass_purge:
             await mass_purge(to_delete, channel)
         else:
