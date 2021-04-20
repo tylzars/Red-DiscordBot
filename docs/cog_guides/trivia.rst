@@ -432,3 +432,82 @@ trivia stop
 **Description**
 
 Stops an ongoing trivia session.
+
+====================
+Trivia List Creation
+====================
+
+**Locations**
+Trivia lists are added under the filepath: /redbot/cogs/trivia/data/lists
+
+
+^^^^^^^^^
+Filenames
+^^^^^^^^^
+
+**File Format**
+These lists are encoded using the ".yaml" file format.
+An example of a list filename would be
+
+.. code-block:: none
+
+    example.yaml
+    
+**Conventions**
+The filename should accurately describe what is contained inside the trivia questions. 
+It should be no longer than 75 characters. 
+
+^^^^^^^^^^^
+File Header
+^^^^^^^^^^^
+
+**Format**
+The header should include your name only and no other information. It should be only on the 1st line of the file. 
+It will be formatted like the following example
+
+.. code-block:: none
+
+    AUTHOR: example
+    
+^^^^^^^^^^^^^^^^^^^
+Questions & Answers
+^^^^^^^^^^^^^^^^^^^
+
+**Question Format**
+The question will be placed inside of quotation marks and the character after the closing quotation mark will be a colon. 
+The question format will look like the following:
+
+.. code-block:: none
+
+    "This planets surface temperature is -230°C.":
+    
+Note: The question can be in any desired format inside the quotation marks. 
+
+**Answer Format**
+The answer(s) is on the directly after the question. It is formatted with a hyphen (-), then a space, then the answer. 
+.. code-block:: none
+
+    - Four
+    
+**Multiple Answer Format**
+The answer(s) is on the directly after the question. It is formatted with a hyphen (-), then a space, then the answer. Sequential answers are on the next lines. 
+.. code-block:: none
+
+    - Four
+    - 4
+
+
+^^^^^^^^^^^^^^^^
+Including Images
+^^^^^^^^^^^^^^^^
+
+**Formatting**
+An image can be included in your question, one can be implemented by putting the link in the questions. 
+For example: 
+.. code-block:: none
+
+    Who's that Pokémon? https://cdn.discord.red/i/hWxoVFP.png:
+
+
+
+
